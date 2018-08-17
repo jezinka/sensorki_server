@@ -21,19 +21,25 @@ class DataController {
 
         ['Balkon', 'Salon', 'Biuro', 'Łazienka', 'Sypialnia', 'Piwnica'].eachWithIndex { String room, int idx ->
             sensors << [(idx): ["label": room, "data": ["hum_temp", "hum_hum", "lux", "vbat", "vreg"]]]
-            readings << [(idx): ["id": randomId, "stamp": timeStamp, "sensor_id": 1, "seq": randomId, "status": 0, "flags": randomId, "bar_temp": randomTemp, "bar_pres_abs": 1002.67, "bar_pres_rel": 1018.63, "lux": randomLux, "hum_temp": randomTemp, "hum_hum": randomHumHum, "vbat": randomVBat, "vreg": randomVReg]]
+            readings << [(idx): ["id"          : randomId, "stamp": timeStamp, "sensor_id": idx, "seq": randomId, "status": 0,
+                                 "flags"       : randomId, "bar_temp": randomTemp, "bar_pres_abs": randomBarPress,
+                                 "bar_pres_rel": randomBarPress, "lux": randomLux, "hum_temp": randomTemp,
+                                 "hum_hum"     : randomHumHum, "vbat": randomVBat, "vreg": randomVReg]]
         }
 
         ["sensors": sensors, "readings": readings, "data": data]
+    }
+
+    private static Double getRandomBarPress() {
+        ThreadLocalRandom.current().nextDouble(1000, 1100)
     }
 
     private static int getRandomId() {
         ThreadLocalRandom.current().nextInt()
     }
 
-    private BigDecimal getTimeStamp() {
-        //tylko sekundy w tył
-        new Date().getTime() / 1000
+    private static BigDecimal getTimeStamp() {
+        (new Date().getTime() / 1000) - ThreadLocalRandom.current().nextInt(10, 50)
     }
 
     static Double getRandomTemp() {
